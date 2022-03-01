@@ -1,0 +1,23 @@
+.itemCard {
+  display: flex;
+  border: 2px solid silver;
+  margin: 2em 0;
+}
+
+.itemCard img {
+  max-height: 180px;
+  max-width: 200px;
+}
+.itemCard .text {
+  padding: 30px;
+}
+.buttons {
+  padding: 30px;
+}
+
+label {
+  margin-right: 10px;
+}
+.editForm{
+  padding: 30px;
+}

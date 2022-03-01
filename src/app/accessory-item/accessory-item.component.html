@@ -1,0 +1,118 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <button
+        type="button"
+        class="btn btn-success mt-5"
+        (click)="addForm = !addForm"
+      >
+        {{ addForm! ? "Close" : " Add new phone" }}
+      </button>
+    </div>
+    <div class="col-md-12 mt-5">
+      <div class="addForm" *ngIf="addForm != false">
+        <form [formGroup]="accessoryForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="accessory-name">Accessory Name: </label>
+            <input
+              id="accessory-name"
+              type="text"
+              formControlName="accessoryName"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="accessory-price">Accessory Price: </label>
+            <input
+              id="accessory-price"
+              type="number"
+              formControlName="accessoryPrice"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="accessory-image">Accessory Image: </label>
+            <input
+              id="accessory-image"
+              type="text"
+              formControlName="accessoryImage"
+            />
+          </div>
+
+          <button class="btn btn-success mt-5" type="submit">Save</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="itemCard" *ngFor="let accessory of accessories">
+        <img
+          [src]="accessory.image"
+          alt="{{ accessory.name }}"
+          class="img-responsive"
+        />
+        <div class="text">
+          <p>{{ accessory.name }}</p>
+          <p>{{ accessory.price }} TL</p>
+        </div>
+
+        <div class="buttons">
+          <button
+            type="button"
+            class="btn btn-primary mx-2"
+            (click)="editForm = !editForm"
+            (click)="onEdit(accessory.name, accessory.image, accessory.price)"
+          >
+            {{ editForm! ? "Close" : "Edit" }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger mx-2"
+            (click)="onDelete(accessory.image)"
+          >
+            Delete
+          </button>
+        </div>
+
+        <div
+          class="editForm"
+          *ngIf="
+            editForm != false &&
+            this.accessories[this.editIndex].image == accessory.image
+          "
+        >
+          <form [formGroup]="editAccessoryForm">
+            <div class="mb-3">
+              <label for="accessory-name">Accessory Name: </label>
+              <input
+                id="accessory-name"
+                type="text"
+                formControlName="accessoryNameEdit"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="accessory-price">Accessory Price: </label>
+              <input
+                id="accessory-price"
+                type="number"
+                formControlName="accessoryPriceEdit"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="accessory-image">Accessory Image: </label>
+              <input
+                id="accessory-image"
+                type="text"
+                formControlName="accessoryImageEdit"
+              />
+            </div>
+
+            <button
+              class="btn btn-success mt-5"
+              (click)="onEditForm(accessory.image)"
+            >
+              Save
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,214 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <button
+        type="button"
+        class="btn btn-success mt-5"
+        (click)="addForm = !addForm"
+      >
+        {{ addForm! ? "Close" : " Add new phone" }}
+      </button>
+    </div>
+    <div class="col-md-12 mt-5">
+      <div class="addForm" *ngIf="addForm != false">
+        <form [formGroup]="phoneForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="phone-name">Phone Name: </label>
+            <input id="phone-name" type="text" formControlName="phoneName" />
+          </div>
+          <div class="mb-3">
+            <label for="phone-price">Phone Price: </label>
+            <input
+              id="phone-price"
+              type="number"
+              formControlName="phonePrice"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="phone-image">Phone Image: </label>
+            <input id="phone-image" type="text" formControlName="phoneImage" />
+          </div>
+
+          <div class="mb-3">
+            <label for="phone-model">Phone Model: </label>
+            <input id="phone-model" type="text" formControlName="phoneModel" />
+          </div>
+
+          <div class="mb-3">
+            <label for="phone-color">Phone Color: </label>
+            <input id="phone-color" type="text" formControlName="phoneColor" />
+          </div>
+
+          <div class="mb-3">
+            <label for="phone-screenSize">Phone Screensize: </label>
+            <input
+              id="phone-screenSize"
+              type="text"
+              formControlName="phoneScreenSize"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="phone-description">Phone Description: </label>
+            <input
+              id="phone-description"
+              type="text"
+              formControlName="phoneDescription"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="phone-sku">Phone SKU: </label>
+            <input id="phone-sku" type="text" formControlName="phoneSKU" />
+          </div>
+
+          <div class="mb-3">
+            <label for="phone-id">Phone ID: </label>
+            <input id="phone-id" type="text" formControlName="phoneID" />
+          </div>
+
+          <button class="btn btn-success mt-5" type="submit">Save</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="itemCard" *ngFor="let phone of phones">
+        <div class="items">
+          <img
+            [src]="phone.image"
+            alt="{{ phone.name }}"
+            class="img-responsive"
+          />
+          <div class="text">
+            <p>{{ phone.name }}</p>
+            <p>{{ phone.price }} TL</p>
+            <p>{{ phone.modelName }}</p>
+            <p>{{ phone.color }}</p>
+            <p>{{ phone.screenSize }}</p>
+            <p>{{ phone.description }}</p>
+            <p>SKU: {{ phone.sku }}</p>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button
+            type="button"
+            class="btn btn-primary mx-2"
+            (click)="editForm = !editForm"
+            (click)="
+              onEdit(
+                phone.name,
+                phone.image,
+                phone.price,
+                phone.modelName,
+                phone.color,
+                phone.screenSize,
+                phone.description,
+                phone.sku,
+                phone.id
+              )
+            "
+          >
+            {{ editForm! ? "Close" : "Edit" }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger mx-2"
+            (click)="onDelete(phone.id)"
+          >
+            Delete
+          </button>
+        </div>
+
+        <div
+          class="editForm"
+          *ngIf="
+            editForm != false &&
+            this.phones[this.editIndex].id == phone.id
+          "
+        >
+          <form [formGroup]="editPhoneForm">
+            <div class="mb-3">
+              <label for="phone-name">Phone Name: </label>
+              <input
+                id="phone-name"
+                type="text"
+                formControlName="phoneNameEdit"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="phone-price">Phone Price: </label>
+              <input
+                id="phone-price"
+                type="number"
+                formControlName="phonePriceEdit"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="phone-image">Phone Image: </label>
+              <input
+                id="phone-image"
+                type="text"
+                formControlName="phoneImageEdit"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="phone-model">Phone Model: </label>
+              <input
+                id="phone-model"
+                type="text"
+                formControlName="phoneModelEdit"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="phone-color">Phone Color: </label>
+              <input
+                id="phone-color"
+                type="text"
+                formControlName="phoneColorEdit"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="phone-screenSize">Phone Screensize: </label>
+              <input
+                id="phone-screenSize"
+                type="text"
+                formControlName="phoneScreenSizeEdit"
+              />
+            </div>
+
+            <div class="mb-3">
+              <label for="phone-description">Phone Description: </label>
+              <textarea
+                class="form-control"
+                formControlName="phoneDescriptionEdit"
+                id="phone-description"
+                rows="3"
+              >
+              </textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="phone-description">Phone SKU: </label>
+              <input
+                id="phone-sku"
+                type="text"
+                formControlName="phoneSKUEdit"
+              />
+            </div>
+
+            <button
+              class="btn btn-success mt-5"
+              (click)="onEditFormSave(phone.id)"
+            >
+              Save
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

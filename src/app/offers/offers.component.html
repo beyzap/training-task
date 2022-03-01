@@ -1,0 +1,87 @@
+<div class="container">
+  <h2>
+    Listeden bir telefon ve bir aksesuar seçin
+  </h2>
+  <div class="row">
+    <div class="col-md-6">
+      <form [formGroup]="form">
+        <div class="itemCard" *ngFor="let phone of phones">
+          <input
+            type="radio"
+            formControlName="selectedPhone"
+            value="{{ phone.price }}"
+            (change)="changePhone(phone.price)"
+          />
+
+          <label for="selectedPhone">
+            <img
+              [src]="phone.image"
+              alt="{{ phone.name }}"
+              class="img-responsive"
+            />
+            <div class="text">
+              <p>{{ phone.name }}</p>
+              <p>{{ phone.price }} TL</p>
+              <p>{{ phone.modelName }}</p>
+              <p>{{ phone.color }}</p>
+              <p>{{ phone.screenSize }}</p>
+              <p>{{ phone.description }}</p>
+              <p>{{ phone.sku }}</p>
+            </div>
+          </label>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-6">
+      <form [formGroup]="form">
+        <div class="itemCard" *ngFor="let accessory of accessories">
+          <input
+            type="radio"
+            formControlName="selectedAccessory"
+            value="{{ accessory.price }}"
+            (change)="changeAccessory(accessory.price)"
+          />
+
+          <label for="selectedAccessory">
+            <img
+              [src]="accessory.image"
+              alt="{{ accessory.name }}"
+              class="img-responsive"
+            />
+            <div class="text">
+              <p>{{ accessory.name }}</p>
+              <p>{{ accessory.price }} TL</p>
+            </div>
+          </label>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div *ngIf="selectedPhonePrice != null && selectedAccessoryPrice != null">
+        <div class="d-grid gap-2 mb-3">
+          <button class="btn btn-primary" type="button" (click)="onCalculate()">
+            Hesapla
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div *ngIf="newPrice != null">
+        <div class="text mt-5 mb-5">
+          <p>Telefonun ilk fiyatı : {{ selectedPhonePrice }} TL</p>
+          <p>Aksesuarın ilk fiyatı: {{ selectedAccessoryPrice }} TL</p>
+          <p>İndirim oranınız %20</p>
+          <p>İndirim tutarı: {{ discount }} TL</p>
+          <p>Ödenecek toplam tutar: {{ newPrice }} TL</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
