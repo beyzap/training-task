@@ -19,7 +19,7 @@ export class PhoneService {
 
   addPhone(phoneName: string, phonePrice: number, phoneImage: string,
     phoneModel: string, phoneColor: string, phoneScreenSize: string,
-    phoneDescription: string, phoneSKU: string, phoneID: number): Observable<Phone> {
+    phoneDescription: string, phoneSKU: string, phoneID: number): void {
 
     let newPhone: Phone = new Phone(phoneName,
       phonePrice, phoneImage,
@@ -28,8 +28,6 @@ export class PhoneService {
       phoneSKU, phoneID)
 
     this.phones.push(newPhone);
-
-    return of(newPhone);
   }
 
 
@@ -43,14 +41,14 @@ export class PhoneService {
     phoneModelEdit: string, phoneColorEdit: string, phoneScreenSizeEdit: string, phoneDescriptionEdit: string,
     phoneSKUEdit: string): Observable<Phone[]> {
 
-      this.phones[id].name = phoneNameEdit;
-      this.phones[id].image = phoneImageEdit;
-      this.phones[id].price = phonePriceEdit;
-      this.phones[id].modelName = phoneModelEdit;
-      this.phones[id].color = phoneColorEdit;
-      this.phones[id].screenSize = phoneScreenSizeEdit;
-      this.phones[id].description = phoneDescriptionEdit;
-      this.phones[id].sku = phoneSKUEdit;
+    this.phones[id].name = phoneNameEdit;
+    this.phones[id].image = phoneImageEdit;
+    this.phones[id].price = phonePriceEdit;
+    this.phones[id].modelName = phoneModelEdit;
+    this.phones[id].color = phoneColorEdit;
+    this.phones[id].screenSize = phoneScreenSizeEdit;
+    this.phones[id].description = phoneDescriptionEdit;
+    this.phones[id].sku = phoneSKUEdit;
     return of(this.phones);
   }
 

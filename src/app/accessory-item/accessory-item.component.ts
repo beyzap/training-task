@@ -20,6 +20,7 @@ export class AccessoryItemComponent implements OnInit {
     accessoryName: new FormControl(''),
     accessoryPrice: new FormControl(''),
     accessoryImage: new FormControl(''),
+    accessoryID: new FormControl(''),
   });
 
   editAccessoryForm = new FormGroup({
@@ -35,40 +36,44 @@ export class AccessoryItemComponent implements OnInit {
   }
 
   getAccessories(): void {
-    this.accessories = this.accessoryService.getAccessories();
+    this.accessoryService.getAccessories()
+      .subscribe(accessories => this.accessories = accessories);
   }
 
-  onSubmit() {
-    this.accessories.push(new Accessory(this.accessoryForm.value.accessoryName,
-      this.accessoryForm.value.accessoryPrice, this.accessoryForm.value.accessoryImage));
 
+  onSubmit() {
+    this.accessoryService.addAccessory(this.accessoryForm.value.accessoryName,
+      this.accessoryForm.value.accessoryPrice,
+      this.accessoryForm.value.accessoryImage,
+      this.accessoryForm.value.accessoryID)
     this.accessoryForm.reset();
   }
 
-  onDelete(image: string) {
-    let index = this.accessories.findIndex(x => x.image === image)
-    this.accessories.splice(index, 1)
+  onDelete(id: number) {
+    this.accessoryService.deleteAccessory(id)
   }
 
-  onEdit(name: string, image: string, price: number) {
+
+  onEdit(name: string, image: string, price: number, id: number) {
+
     this.editAccessoryForm.patchValue({
       accessoryNameEdit: name,
       accessoryImageEdit: image,
-      accessoryPriceEdit: price
+      accessoryPriceEdit: price,
     });
 
-    this.editIndex = this.accessories.findIndex(x => x.image === image);
-    console.log(this.editIndex)
-    console.log(this.accessories[this.editIndex])
+    this.editIndex = this.accessories.findIndex(x => x.id === id);
+
+    this.accessoryService.editAccessory(id, this.editAccessoryForm.value.accessoryNameEdit,
+      this.editAccessoryForm.value.accessoryPriceEdit,
+      this.editAccessoryForm.value.accessoryImageEdit)
+
 
   }
-  onEditForm(image: string) {
-
-    let index = this.accessories.findIndex(x => x.image === image);
-
-    this.accessories[index].name = this.editAccessoryForm.value.accessoryNameEdit;
-    this.accessories[index].image = this.editAccessoryForm.value.accessoryImageEdit;
-    this.accessories[index].price = this.editAccessoryForm.value.accessoryPriceEdit;
+  onEditFormSave(id: number) {
+    this.accessoryService.editAccessory(id, this.editAccessoryForm.value.accessoryNameEdit,
+      this.editAccessoryForm.value.accessoryPriceEdit,
+      this.editAccessoryForm.value.accessoryImageEdit)
 
   }
 

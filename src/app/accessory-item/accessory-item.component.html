@@ -6,7 +6,7 @@
         class="btn btn-success mt-5"
         (click)="addForm = !addForm"
       >
-        {{ addForm! ? "Close" : " Add new phone" }}
+        {{ addForm! ? "Close" : " Add new accessory" }}
       </button>
     </div>
     <div class="col-md-12 mt-5">
@@ -36,6 +36,14 @@
               formControlName="accessoryImage"
             />
           </div>
+          <div class="mb-3">
+            <label for="accessory-id">Accessory ID: </label>
+            <input
+              id="accessory-id"
+              type="text"
+              formControlName="accessoryID"
+            />
+          </div>
 
           <button class="btn btn-success mt-5" type="submit">Save</button>
         </form>
@@ -58,14 +66,21 @@
             type="button"
             class="btn btn-primary mx-2"
             (click)="editForm = !editForm"
-            (click)="onEdit(accessory.name, accessory.image, accessory.price)"
+            (click)="
+              onEdit(
+                accessory.name,
+                accessory.image,
+                accessory.price,
+                accessory.id
+              )
+            "
           >
             {{ editForm! ? "Close" : "Edit" }}
           </button>
           <button
             type="button"
             class="btn btn-danger mx-2"
-            (click)="onDelete(accessory.image)"
+            (click)="onDelete(accessory.id)"
           >
             Delete
           </button>
@@ -75,7 +90,7 @@
           class="editForm"
           *ngIf="
             editForm != false &&
-            this.accessories[this.editIndex].image == accessory.image
+            this.accessories[this.editIndex].id == accessory.id
           "
         >
           <form [formGroup]="editAccessoryForm">
@@ -106,7 +121,7 @@
 
             <button
               class="btn btn-success mt-5"
-              (click)="onEditForm(accessory.image)"
+              (click)="onEditFormSave(accessory.id)"
             >
               Save
             </button>

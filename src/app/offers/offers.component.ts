@@ -20,12 +20,11 @@ export class OffersComponent implements OnInit {
     selectedAccessory: new FormControl(''),
   });
 
-  @Input() phones: Phone[] = [];
+  phones: Phone[] = [];
   accessories: Accessory[] = [];
 
   constructor(private phoneService: PhoneService, private accessoryService: AccessoryService) {
   }
-
 
   ngOnInit(): void {
     this.getPhones();
@@ -36,9 +35,10 @@ export class OffersComponent implements OnInit {
     this.phoneService.getPhones()
       .subscribe(phones => this.phones = phones);
   }
-  
+
   getAccessories(): void {
-    this.accessories = this.accessoryService.getAccessories();
+    this.accessoryService.getAccessories()
+      .subscribe(accessories => this.accessories = accessories);
   }
 
   selectedPhonePrice: any;
@@ -59,10 +59,6 @@ export class OffersComponent implements OnInit {
     this.selectedSum = this.selectedAccessoryPrice + this.selectedPhonePrice;
     this.discount = this.selectedSum * 0.2
     this.newPrice = this.selectedSum - this.discount
-
-    console.log()
-
   }
-
 
 }

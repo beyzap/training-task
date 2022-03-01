@@ -11,7 +11,7 @@ import { Phone } from './phone-item.model';
 })
 export class PhoneItemComponent implements OnInit {
 
-  @Input() phones: Phone[] = [];
+ phones: Phone[] = [];
 
   addForm: boolean = false;
   editForm: boolean = false;
@@ -51,14 +51,13 @@ export class PhoneItemComponent implements OnInit {
       this.phoneForm.value.phonePrice, this.phoneForm.value.phoneImage,
       this.phoneForm.value.phoneModel, this.phoneForm.value.phoneColor,
       this.phoneForm.value.phoneScreenSize, this.phoneForm.value.phoneDescription,
-      this.phoneForm.value.phoneSKU, this.phoneForm.value.phoneID).subscribe(phone => this.phones.push(phone))
+      this.phoneForm.value.phoneSKU, this.phoneForm.value.phoneID)
 
     this.phoneForm.reset();
   }
 
   getPhones(): void {
-    this.phoneService.getPhones()
-      .subscribe(phones => this.phones = phones);
+    this.phoneService.getPhones() .subscribe(phones => this.phones = phones);
   }
 
   onDelete(id: number) {
