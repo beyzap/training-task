@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 import { PhoneService } from 'src/app/phone.service';
 import { Phone } from './phone-item.model';
@@ -11,7 +12,7 @@ import { Phone } from './phone-item.model';
 })
 export class PhoneItemComponent implements OnInit {
 
- phones: Phone[] = [];
+  phones: Phone[] = [];
 
   addForm: boolean = false;
   editForm: boolean = false;
@@ -25,8 +26,7 @@ export class PhoneItemComponent implements OnInit {
     phoneColor: new FormControl(''),
     phoneScreenSize: new FormControl(''),
     phoneDescription: new FormControl(''),
-    phoneSKU: new FormControl(''),
-    phoneID: new FormControl('')
+    phoneSKU: new FormControl('')
   });
 
   editPhoneForm = new FormGroup({
@@ -42,30 +42,44 @@ export class PhoneItemComponent implements OnInit {
 
   constructor(private phoneService: PhoneService) { }
 
-  ngOnInit(): void {
-    this.getPhones()
+  ngOnInit() {
+    this.getPhones();
   }
 
   onSubmit() {
-    this.phoneService.addPhone(this.phoneForm.value.phoneName,
-      this.phoneForm.value.phonePrice, this.phoneForm.value.phoneImage,
-      this.phoneForm.value.phoneModel, this.phoneForm.value.phoneColor,
-      this.phoneForm.value.phoneScreenSize, this.phoneForm.value.phoneDescription,
-      this.phoneForm.value.phoneSKU, this.phoneForm.value.phoneID)
+    let postData = {
+      name: this.phoneForm.value.phoneName, 
+      price: this.phoneForm.value.phonePrice,
+      image: this.phoneForm.value.phoneImage,
+      model: this.phoneForm.value.phoneModel,
+      color: this.phoneForm.value.phoneColor, 
+      screenSize: this.phoneForm.value.phoneScreenSize,
+      description: this.phoneForm.value.phoneDescription, 
+      sku: this.phoneForm.value.phoneSKU
+    }
+    this.phoneService.onAddPhone(postData)
 
     this.phoneForm.reset();
   }
 
-  getPhones(): void {
-    this.phoneService.getPhones() .subscribe(phones => this.phones = phones);
+  getPhones() {
+    this.phoneService.getPhones()
+      .subscribe(phones => this.phones = phones);
+    console.log(this.phones)
   }
 
-  onDelete(id: number) {
-    this.phoneService.deletePhone(id)
+  onClick() {
+    this.getPhones()
+  }
+
+
+  onDelete(id: string): void {
+    
+    this.phoneService.onDeletePhone(id).subscribe();
   }
 
   onEdit(name: string, image: string, price: number, model: string, color: string,
-    screenSize: string, descpription: string, sku: string, id: number) {
+    screenSize: string, descpription: string, sku: string, id: string) {
     this.editPhoneForm.patchValue({
       phoneNameEdit: name,
       phoneImageEdit: image,
@@ -77,20 +91,13 @@ export class PhoneItemComponent implements OnInit {
       phoneSKUEdit: sku
     });
 
-    this.editIndex = this.phones.findIndex(x => x.id === id);
+    this.editIndex = 0;
 
-    this.phoneService.editPhone(id, this.editPhoneForm.value.phoneNameEdit, this.editPhoneForm.value.phoneImageEdit,
-      this.editPhoneForm.value.phonePriceEdit, this.editPhoneForm.value.phoneModelEdit,
-      this.editPhoneForm.value.phoneColorEdit, this.editPhoneForm.value.phoneScreenSizeEdit,
-      this.editPhoneForm.value.phoneDescriptionEdit, this.editPhoneForm.value.phoneSKUEdit)
 
 
   }
-  onEditFormSave(id: number) {
-    this.phoneService.editPhone(id, this.editPhoneForm.value.phoneNameEdit, this.editPhoneForm.value.phoneImageEdit,
-      this.editPhoneForm.value.phonePriceEdit, this.editPhoneForm.value.phoneModelEdit,
-      this.editPhoneForm.value.phoneColorEdit, this.editPhoneForm.value.phoneScreenSizeEdit,
-      this.editPhoneForm.value.phoneDescriptionEdit, this.editPhoneForm.value.phoneSKUEdit)
+  onEditFormSave(id: string) {
+
   }
 
 }

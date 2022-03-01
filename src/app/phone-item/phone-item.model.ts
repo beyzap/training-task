@@ -7,10 +7,10 @@ export class Phone {
     public description: string;
     public sku: string;
     public modelName: string;
-    public id : number;
+    public id : string;
 
     constructor(name: string, price: number, image: string, color: string, screenSize: string, description: string,
-        sku: string, modelName: string, id: number) {
+        sku: string, modelName: string, id: string) {
         this.name = name;
         this.price = price;
         this.image = image;

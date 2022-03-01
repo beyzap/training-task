@@ -1,8 +1,19 @@
-import { Injectable, Input } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, Input, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
+
+import { map } from 'rxjs/operators';
 
 import { Phone } from './phone-item/phone-item.model';
 import { PHONES } from './phones-mock';
+
+const httpOptions = {
+  headers: new HttpHeaders({ 
+    'Access-Control-Allow-Origin':'*',
+    'Authorization':'authkey',
+    'userid':'1'
+  })
+};
 
 @Injectable({
   providedIn: 'root'
@@ -11,28 +22,47 @@ export class PhoneService {
 
   phones: Phone[] = PHONES;
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  getPhones(): Observable<Phone[]> {
-    return of(this.phones);
+  getPhones() {
+    return (
+      this.http.get<{ [key: string]: Phone }>
+        ('https://training-task-37f8f-default-rtdb.firebaseio.com/posts.json')
+        .pipe(
+          map(responseData => {
+            console.log(responseData)
+            const phonesArray: Phone[] = [];
+            for (const key in responseData) {
+              if (responseData.hasOwnProperty(key)) {
+                phonesArray.push({ ...responseData[key], id: key });
+              }
+            }
+            console.log(phonesArray)
+            return phonesArray
+          })
+        )
+    )
   }
 
-  addPhone(phoneName: string, phonePrice: number, phoneImage: string,
-    phoneModel: string, phoneColor: string, phoneScreenSize: string,
-    phoneDescription: string, phoneSKU: string, phoneID: number): void {
+  onAddPhone(postData: {
+    name: string; price: number; image: string;
+    model: string; color: string; screenSize: string;
+    description: string; sku: string
+  }): void {
 
-    let newPhone: Phone = new Phone(phoneName,
-      phonePrice, phoneImage,
-      phoneModel, phoneColor,
-      phoneScreenSize, phoneDescription,
-      phoneSKU, phoneID)
+    this.http.post('https://training-task-37f8f-default-rtdb.firebaseio.com/posts.json', postData)
+      .subscribe(responseData => { console.log(responseData) })
+  }
 
-    this.phones.push(newPhone);
+  onDeletePhone(id: string): Observable<unknown> {
+    
+    const url = `${"https://training-task-37f8f-default-rtdb.firebaseio.com/posts.json"}/${id}`;
+    return this.http.delete(url)
   }
 
 
   deletePhone(id: number): Observable<Phone[]> {
-    let index = this.phones.findIndex(x => x.id === id)
+    let index = 0
     this.phones.splice(index, 1)
     return of(this.phones);
   }
