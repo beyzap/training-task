@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { map } from 'rxjs/operators';
+import { exhaustMap, map, take } from 'rxjs/operators';
+import { AuthService } from './auth/auth.service';
 
 import { Phone } from './phone-item/phone-item.model';
 import { PHONES } from './phones-mock';
@@ -14,24 +15,27 @@ export class PhoneService {
 
   phones: Phone[] = PHONES;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   getPhones() {
-    return (
-      this.http.get<{ [key: string]: Phone }>
-        ('https://training-task-37f8f-default-rtdb.firebaseio.com/posts.json')
-        .pipe(
-          map(responseData => {
-            const phonesArray: Phone[] = [];
-            for (const key in responseData) {
-              if (responseData.hasOwnProperty(key)) {
-                phonesArray.push({ ...responseData[key], id: key });
-              }
-            }
-            return phonesArray
-          })
-        )
-    )
+    return this.authService.user.pipe(take(1), exhaustMap(user => {
+      return (
+        this.http.get<{ [key: string]: Phone }>
+          ('https://training-task-37f8f-default-rtdb.firebaseio.com/posts.json?auth=' + user?.token,
+          )
+      )
+    }),
+      map(responseData => {
+        const phonesArray: Phone[] = [];
+        for (const key in responseData) {
+          if (responseData.hasOwnProperty(key)) {
+            phonesArray.push({ ...responseData[key], id: key });
+          }
+        }
+        return phonesArray
+      })
+
+    );
   }
 
   onAddPhone(postData: {
@@ -48,14 +52,15 @@ export class PhoneService {
   }
 
   onEditPhone(postData: {
-                          name: string; 
-                          price: number; 
-                          image: string;
-                          model: string; 
-                          color: string; 
-                          screenSize: string;
-                          description: string; 
-                          sku: string }, id: string): Observable<unknown> {
+    name: string;
+    price: number;
+    image: string;
+    model: string;
+    color: string;
+    screenSize: string;
+    description: string;
+    sku: string
+  }, id: string): Observable<unknown> {
 
     const url = `https://training-task-37f8f-default-rtdb.firebaseio.com/posts/${id}/.json`;
 

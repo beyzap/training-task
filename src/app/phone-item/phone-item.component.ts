@@ -81,7 +81,6 @@ export class PhoneItemComponent implements OnInit {
       phoneDescriptionEdit: descpription,
       phoneSKUEdit: sku
     });
-
     this.editIndex = this.phones.findIndex(x => x.id === id);
   }
   
@@ -96,7 +95,6 @@ export class PhoneItemComponent implements OnInit {
       description: this.editPhoneForm.value.phoneDescriptionEdit, 
       sku: this.editPhoneForm.value.phoneSKUEdit
     }
-
     this.phoneService.onEditPhone(postData, id).subscribe()
 
   }

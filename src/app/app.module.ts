@@ -9,7 +9,8 @@ import { AccessoryItemComponent } from './accessory-item/accessory-item.componen
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { OffersComponent } from './offers/offers.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AuthComponent } from './auth/auth.component';
 
 @NgModule({
   declarations: [
@@ -17,14 +18,16 @@ import { ReactiveFormsModule } from '@angular/forms';
     PhoneItemComponent,
     HeaderComponent,
     AccessoryItemComponent,
-    OffersComponent
+    OffersComponent,
+    AuthComponent
   ],
   imports: [
     BrowserModule,
     NgbModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

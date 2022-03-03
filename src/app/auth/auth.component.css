@@ -1,0 +1,17 @@
+.auth {
+  display: table;
+  width: 100%;
+  padding: 100px;
+}
+.form {
+  display: table-cell;
+}
+.buttons{
+    padding-top: 30px;
+}
+.buttons button{
+    margin-right: 30px;
+}
+label{
+    padding: 20px 0;
+}
