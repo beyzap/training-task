@@ -1,6 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 
 import { PhoneService } from 'src/app/phone.service';
 import { Phone } from './phone-item.model';
@@ -16,7 +15,7 @@ export class PhoneItemComponent implements OnInit {
 
   addForm: boolean = false;
   editForm: boolean = false;
-  editIndex: number = 0;
+  editIndex: any;
 
   phoneForm = new FormGroup({
     phoneName: new FormControl(''),
@@ -48,7 +47,7 @@ export class PhoneItemComponent implements OnInit {
 
   onSubmit() {
     let postData = {
-      name: this.phoneForm.value.phoneName, 
+      name:  this.phoneForm.value.phoneName, 
       price: this.phoneForm.value.phonePrice,
       image: this.phoneForm.value.phoneImage,
       model: this.phoneForm.value.phoneModel,
@@ -57,24 +56,16 @@ export class PhoneItemComponent implements OnInit {
       description: this.phoneForm.value.phoneDescription, 
       sku: this.phoneForm.value.phoneSKU
     }
-    this.phoneService.onAddPhone(postData)
-
+    this.phoneService.onAddPhone(postData).subscribe()
     this.phoneForm.reset();
   }
 
   getPhones() {
     this.phoneService.getPhones()
       .subscribe(phones => this.phones = phones);
-    console.log(this.phones)
   }
-
-  onClick() {
-    this.getPhones()
-  }
-
 
   onDelete(id: string): void {
-    
     this.phoneService.onDeletePhone(id).subscribe();
   }
 
@@ -91,12 +82,22 @@ export class PhoneItemComponent implements OnInit {
       phoneSKUEdit: sku
     });
 
-    this.editIndex = 0;
-
-
-
+    this.editIndex = this.phones.findIndex(x => x.id === id);
   }
-  onEditFormSave(id: string) {
+  
+  onEditFormSave( id: string) {
+    let postData = {
+      name: this.editPhoneForm.value.phoneNameEdit, 
+      price: this.editPhoneForm.value.phonePriceEdit,
+      image: this.editPhoneForm.value.phoneImageEdit,
+      model: this.editPhoneForm.value.phoneModelEdit,
+      color: this.editPhoneForm.value.phoneColorEdit, 
+      screenSize: this.editPhoneForm.value.phoneScreenSizeEdit,
+      description: this.editPhoneForm.value.phoneDescriptionEdit, 
+      sku: this.editPhoneForm.value.phoneSKUEdit
+    }
+
+    this.phoneService.onEditPhone(postData, id).subscribe()
 
   }
 

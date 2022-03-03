@@ -27,11 +27,13 @@ export class OffersComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getPhones();
     this.getAccessories();
   }
 
   getPhones(): void {
-    this.phoneService.getPhones();
+    this.phoneService.getPhones()
+      .subscribe(phones => this.phones = phones);
   }
 
   getAccessories(): void {

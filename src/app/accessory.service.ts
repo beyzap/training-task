@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 import { Accessory } from './accessory-item/accessory-item.model';
 import { ACCESSORIES } from './accessories-mock';
-import { Observable, of } from 'rxjs';
+import { Observable, of, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,36 +12,46 @@ export class AccessoryService {
 
   accessories: Accessory[] = ACCESSORIES;
 
-  constructor() { }
-  
+  constructor(private http: HttpClient) { }
 
-  getAccessories(): Observable<Accessory[]> {
-    return of(this.accessories);
+  getAccessories() {
+    return (
+      this.http.get<{ [key: string]: Accessory }>
+        ('https://training-task-37f8f-default-rtdb.firebaseio.com/accessories.json')
+        .pipe(
+          map(responseData => {
+            const accessoriesArray: Accessory[] = [];
+            for (const key in responseData) {
+              if (responseData.hasOwnProperty(key)) {
+                accessoriesArray.push({ ...responseData[key], id: key });
+              }
+            }
+            return accessoriesArray
+          })
+        )
+    )
   }
 
-  addAccessory(accessoryName: string, accessoryPrice: number, accessoryImage: string,
-    accessoryID: number): void {
+  onAddAccessory(postData: {
+    name: string; price: number; image: string
+  }): void {
 
-    let newAccessory: Accessory = new Accessory(accessoryName,
-      accessoryPrice, accessoryImage,
-      accessoryID)
-
-    this.accessories.push(newAccessory);
+    this.http.post('https://training-task-37f8f-default-rtdb.firebaseio.com/accessories.json', postData)
+      .subscribe(responseData => { console.log(responseData) })
   }
 
-  deleteAccessory(id: number): Observable<Accessory[]> {
-    let index = this.accessories.findIndex(x => x.id === id)
-    this.accessories.splice(index, 1)
-    return of(this.accessories);
+  onDeleteAccessory(id: string): Observable<unknown> {
+    const url = `https://training-task-37f8f-default-rtdb.firebaseio.com/accessories/${id}/.json`;
+    return this.http.delete(url)
   }
 
-  editAccessory(id: number, accessoryNameEdit: string, 
-                accessoryPriceEdit: number, accessoryImageEdit: string, ): Observable<Accessory[]> {
+  onEditAccessory( postData: {
+                      name: string; 
+                      price: number; 
+                      image: string}, id: string): Observable<unknown> {
 
-    this.accessories[id].name = accessoryNameEdit;
-    this.accessories[id].image = accessoryImageEdit;
-    this.accessories[id].price = accessoryPriceEdit;
-    
-    return of(this.accessories);
+    const url = `https://training-task-37f8f-default-rtdb.firebaseio.com/accessories/${id}/.json`;
+
+    return this.http.put(url, postData)
   }
 }

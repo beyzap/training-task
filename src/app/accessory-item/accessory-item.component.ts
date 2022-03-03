@@ -14,13 +14,12 @@ export class AccessoryItemComponent implements OnInit {
   accessories: Accessory[] = [];
   addForm: boolean = false;
   editForm: boolean = false;
-  editIndex: number = 0;
+  editIndex: any;
 
   accessoryForm = new FormGroup({
     accessoryName: new FormControl(''),
     accessoryPrice: new FormControl(''),
     accessoryImage: new FormControl(''),
-    accessoryID: new FormControl(''),
   });
 
   editAccessoryForm = new FormGroup({
@@ -42,20 +41,21 @@ export class AccessoryItemComponent implements OnInit {
 
 
   onSubmit() {
-    this.accessoryService.addAccessory(this.accessoryForm.value.accessoryName,
-      this.accessoryForm.value.accessoryPrice,
-      this.accessoryForm.value.accessoryImage,
-      this.accessoryForm.value.accessoryID)
+    let postData = {
+      name: this.accessoryForm.value.accessoryName,
+      price: this.accessoryForm.value.accessoryPrice,
+      image: this.accessoryForm.value.accessoryImage,
+    }
+    this.accessoryService.onAddAccessory(postData)
     this.accessoryForm.reset();
   }
 
-  onDelete(id: number) {
-    this.accessoryService.deleteAccessory(id)
+  onDelete(id: string) {
+    this.accessoryService.onDeleteAccessory(id).subscribe()
   }
 
 
-  onEdit(name: string, image: string, price: number, id: number) {
-
+  onEdit(name: string, image: string, price: number, id: string) {
     this.editAccessoryForm.patchValue({
       accessoryNameEdit: name,
       accessoryImageEdit: image,
@@ -63,18 +63,15 @@ export class AccessoryItemComponent implements OnInit {
     });
 
     this.editIndex = this.accessories.findIndex(x => x.id === id);
-
-    this.accessoryService.editAccessory(id, this.editAccessoryForm.value.accessoryNameEdit,
-      this.editAccessoryForm.value.accessoryPriceEdit,
-      this.editAccessoryForm.value.accessoryImageEdit)
-
-
   }
-  onEditFormSave(id: number) {
-    this.accessoryService.editAccessory(id, this.editAccessoryForm.value.accessoryNameEdit,
-      this.editAccessoryForm.value.accessoryPriceEdit,
-      this.editAccessoryForm.value.accessoryImageEdit)
 
+  onEditFormSave(id: string) {
+    let postData = {
+      name: this.editAccessoryForm.value.accessoryNameEdit,
+      price: this.editAccessoryForm.value.accessoryPriceEdit,
+      image: this.editAccessoryForm.value.accessoryImageEdit,
+    }
+    this.accessoryService.onEditAccessory(postData, id).subscribe()
   }
 
 }
