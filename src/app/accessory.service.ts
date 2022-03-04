@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { Accessory } from './accessory-item/accessory-item.model';
 import { ACCESSORIES } from './accessories-mock';
-import { Observable, of, map, take, exhaustMap } from 'rxjs';
+import { Observable, map, take, exhaustMap } from 'rxjs';
 import { AuthService } from './auth/auth.service';
 
 @Injectable({
@@ -37,18 +37,67 @@ export class AccessoryService {
   }
 
   onAddAccessory(postData: {
+    name: string; price: number; image: string; id: string
+  }): Observable<any> {
+    return this.authService.user.pipe(take(1), exhaustMap(user => {
+      return (
+        this.http.post
+          ('https://training-task-37f8f-default-rtdb.firebaseio.com/accessories.json?auth=' + user?.token,
+            postData
+          ).pipe(
+            map(resp => { return postData })
+
+          )
+      )
+    }
+    ))
+  }
+
+  /* onAddAccessory(postData: {
     name: string; price: number; image: string
   }): void {
     this.http.post('https://training-task-37f8f-default-rtdb.firebaseio.com/accessories.json', postData)
       .subscribe(responseData => { console.log(responseData) })
+  } */
+
+  onDeleteAccessory(id: string): Observable<any> {
+
+    const url = `https://training-task-37f8f-default-rtdb.firebaseio.com/accessories/${id}/.json?auth=`;
+
+    return this.authService.user.pipe(take(1), exhaustMap(user => {
+      return (
+        this.http.delete
+          (url + user?.token,
+        )
+      )
+    }))
   }
 
-  onDeleteAccessory(id: string): Observable<unknown> {
+  /* onDeleteAccessory(id: string): Observable<any> {
     const url = `https://training-task-37f8f-default-rtdb.firebaseio.com/accessories/${id}/.json`;
     return this.http.delete(url)
-  }
+  } */
 
   onEditAccessory(postData: {
+    name: string;
+    price: number;
+    image: string
+  }, id: string): Observable<any> {
+
+    const url = `https://training-task-37f8f-default-rtdb.firebaseio.com/accessories/${id}/.json?auth=`;
+
+    return this.authService.user.pipe(take(1), exhaustMap(user => {
+      return (
+        this.http.put(url + user?.token, postData).pipe(
+          map(resp => { return postData })
+
+        )
+      )
+    }))
+
+  }
+
+  /* onEditAccessory(postData: {
     name: string;
     price: number;
     image: string
@@ -57,5 +106,5 @@ export class AccessoryService {
     const url = `https://training-task-37f8f-default-rtdb.firebaseio.com/accessories/${id}/.json`;
 
     return this.http.put(url, postData)
-  }
+  } */
 }

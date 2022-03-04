@@ -41,17 +41,18 @@ export class AccessoryItemComponent implements OnInit {
 
 
   onSubmit() {
-    let postData = {
+    let postData: Accessory = {
       name: this.accessoryForm.value.accessoryName,
       price: this.accessoryForm.value.accessoryPrice,
       image: this.accessoryForm.value.accessoryImage,
+      id: '',
     }
-    this.accessoryService.onAddAccessory(postData)
+    this.accessoryService.onAddAccessory(postData).subscribe(respData => this.accessories.push(respData));
     this.accessoryForm.reset();
   }
 
   onDelete(id: string) {
-    this.accessoryService.onDeleteAccessory(id).subscribe()
+    this.accessoryService.onDeleteAccessory(id).subscribe(respData => this.accessories.push(respData))
   }
 
 
@@ -63,15 +64,18 @@ export class AccessoryItemComponent implements OnInit {
     });
 
     this.editIndex = this.accessories.findIndex(x => x.id === id);
+    console.log(this.editIndex)
+    console.log(id)
   }
 
   onEditFormSave(id: string) {
+
     let postData = {
       name: this.editAccessoryForm.value.accessoryNameEdit,
       price: this.editAccessoryForm.value.accessoryPriceEdit,
       image: this.editAccessoryForm.value.accessoryImageEdit,
     }
-    this.accessoryService.onEditAccessory(postData, id).subscribe()
+    this.accessoryService.onEditAccessory(postData, id).subscribe(respData => this.accessories.push(respData))
   }
 
 }

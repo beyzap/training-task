@@ -22,6 +22,7 @@ export class PhoneService {
       return (
         this.http.get<{ [key: string]: Phone }>
           ('https://training-task-37f8f-default-rtdb.firebaseio.com/posts.json?auth=' + user?.token,
+
           )
       )
     }),
