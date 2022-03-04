@@ -64,8 +64,6 @@ export class AccessoryItemComponent implements OnInit {
     });
 
     this.editIndex = this.accessories.findIndex(x => x.id === id);
-    console.log(this.editIndex)
-    console.log(id)
   }
 
   onEditFormSave(id: string) {

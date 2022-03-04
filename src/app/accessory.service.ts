@@ -32,7 +32,6 @@ export class AccessoryService {
         }
         return accessoriesArray
       })
-
     );
   }
 
@@ -94,7 +93,6 @@ export class AccessoryService {
         )
       )
     }))
-
   }
 
   /* onEditAccessory(postData: {

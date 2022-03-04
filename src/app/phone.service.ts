@@ -23,7 +23,7 @@ export class PhoneService {
         this.http.get<{ [key: string]: Phone }>
           ('https://training-task-37f8f-default-rtdb.firebaseio.com/posts.json?auth=' + user?.token,
 
-          )
+        )
       )
     }),
       map(responseData => {
@@ -39,20 +39,74 @@ export class PhoneService {
     );
   }
 
+
   onAddPhone(postData: {
+    name: string; price: number; image: string;
+    model: string; color: string; screenSize: string;
+    description: string; sku: string
+  }): Observable<any> {
+
+    return this.authService.user.pipe(take(1), exhaustMap(user => {
+      return (
+        this.http.post
+          ('https://training-task-37f8f-default-rtdb.firebaseio.com/posts.json?auth=' + user?.token,
+            postData
+          ).pipe(
+            map(resp => { return postData })
+          )
+      )
+    }))
+  }
+
+  /* onAddPhone(postData: {
     name: string; price: number; image: string;
     model: string; color: string; screenSize: string;
     description: string; sku: string
   }) {
     return this.http.post('https://training-task-37f8f-default-rtdb.firebaseio.com/posts.json', postData)
-  }
+  } */
+
 
   onDeletePhone(id: string): Observable<unknown> {
-    const url = `https://training-task-37f8f-default-rtdb.firebaseio.com/posts/${id}/.json`;
-    return this.http.delete(url)
+    const url = `https://training-task-37f8f-default-rtdb.firebaseio.com/posts/${id}/.json?auth=`;
+    return this.authService.user.pipe(take(1), exhaustMap(user => {
+      return (
+        this.http.delete
+          (url + user?.token,
+        )
+      )
+    }))
   }
 
+  /*  onDeletePhone(id: string): Observable<unknown> {
+     const url = `https://training-task-37f8f-default-rtdb.firebaseio.com/posts/${id}/.json`;
+     return this.http.delete(url)
+   } */
+
   onEditPhone(postData: {
+    name: string;
+    price: number;
+    image: string;
+    model: string;
+    color: string;
+    screenSize: string;
+    description: string;
+    sku: string
+  }, id: string): Observable<unknown> {
+
+    const url = `https://training-task-37f8f-default-rtdb.firebaseio.com/posts/${id}/.json?auth=`;
+
+    return this.authService.user.pipe(take(1), exhaustMap(user => {
+      return (
+        this.http.put(url + user?.token, postData).pipe(
+          map(resp => { return postData })
+
+        )
+      )
+    }))
+  }
+
+  /* onEditPhone(postData: {
     name: string;
     price: number;
     image: string;
@@ -66,6 +120,6 @@ export class PhoneService {
     const url = `https://training-task-37f8f-default-rtdb.firebaseio.com/posts/${id}/.json`;
 
     return this.http.put(url, postData)
-  }
+  } */
 
 }

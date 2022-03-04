@@ -56,7 +56,7 @@ export class PhoneItemComponent implements OnInit {
       description: this.phoneForm.value.phoneDescription, 
       sku: this.phoneForm.value.phoneSKU
     }
-    this.phoneService.onAddPhone(postData).subscribe()
+    this.phoneService.onAddPhone(postData).subscribe(respData => this.phones.push(respData))
     this.phoneForm.reset();
   }
 
