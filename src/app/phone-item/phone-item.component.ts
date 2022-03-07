@@ -56,7 +56,7 @@ export class PhoneItemComponent implements OnInit {
       description: this.phoneForm.value.phoneDescription, 
       sku: this.phoneForm.value.phoneSKU
     }
-    this.phoneService.onAddPhone(postData).subscribe(respData => this.phones.push(respData))
+    this.phoneService.onAddPhone(postData).subscribe(respData =>  {this.getPhones()})
     this.phoneForm.reset();
   }
 
@@ -66,7 +66,7 @@ export class PhoneItemComponent implements OnInit {
   }
 
   onDelete(id: string): void {
-    this.phoneService.onDeletePhone(id).subscribe();
+    this.phoneService.onDeletePhone(id).subscribe(respData => {this.getPhones()})
   }
 
   onEdit(name: string, image: string, price: number, model: string, color: string,
@@ -95,7 +95,7 @@ export class PhoneItemComponent implements OnInit {
       description: this.editPhoneForm.value.phoneDescriptionEdit, 
       sku: this.editPhoneForm.value.phoneSKUEdit
     }
-    this.phoneService.onEditPhone(postData, id).subscribe()
+    this.phoneService.onEditPhone(postData, id).subscribe(respData => {this.getPhones()})
 
   }
 

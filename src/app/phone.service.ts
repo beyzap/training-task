@@ -52,7 +52,7 @@ export class PhoneService {
           ('https://training-task-37f8f-default-rtdb.firebaseio.com/posts.json?auth=' + user?.token,
             postData
           ).pipe(
-            map(resp => { return postData })
+            map(resp => { return resp })
           )
       )
     }))

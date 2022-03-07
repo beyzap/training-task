@@ -67,6 +67,9 @@ export class AccessoryService {
       return (
         this.http.delete
           (url + user?.token,
+        ).pipe(
+          map(resp => { return id })
+
         )
       )
     }))

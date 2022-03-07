@@ -52,7 +52,7 @@ export class AccessoryItemComponent implements OnInit {
   }
 
   onDelete(id: string) {
-    this.accessoryService.onDeleteAccessory(id).subscribe(respData => this.accessories.push(respData))
+    this.accessoryService.onDeleteAccessory(id).subscribe(respData => {this.getAccessories()})
   }
 
 
@@ -73,7 +73,7 @@ export class AccessoryItemComponent implements OnInit {
       price: this.editAccessoryForm.value.accessoryPriceEdit,
       image: this.editAccessoryForm.value.accessoryImageEdit,
     }
-    this.accessoryService.onEditAccessory(postData, id).subscribe(respData => this.accessories.push(respData))
+    this.accessoryService.onEditAccessory(postData, id).subscribe(respData => {this.getAccessories()})
   }
 
 }
